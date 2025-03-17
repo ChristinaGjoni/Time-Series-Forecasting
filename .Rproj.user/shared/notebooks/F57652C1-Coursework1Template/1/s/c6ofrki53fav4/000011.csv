@@ -1,0 +1,6 @@
+"0",""
+"0","# Generate predictions"
+"0","forecast <- predict(model, future)"
+"0",""
+"0","# Check if forecast was generated"
+"0","head(forecast)"

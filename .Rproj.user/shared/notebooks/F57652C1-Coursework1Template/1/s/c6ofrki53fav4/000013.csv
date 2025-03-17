@@ -1,0 +1,3 @@
+"0",""
+"0","# Plot the forecast"
+"0","plot(model, forecast)"

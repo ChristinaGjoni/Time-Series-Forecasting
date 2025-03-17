@@ -1,0 +1,12 @@
+"0",""
+"0","# Train the Prophet model"
+"0","m <- prophet(co2_df)"
+"2","Disabling weekly seasonality. Run prophet with weekly.seasonality=TRUE to override this.
+"
+"2","Disabling daily seasonality. Run prophet with daily.seasonality=TRUE to override this.
+"
+"0","# Create a dataframe for future predictions (8 months ahead)"
+"0","future <- make_future_dataframe(m, periods = 8, freq = ""month"")"
+"0",""
+"0","# Display the first few rows of future dates"
+"0","head(future)"

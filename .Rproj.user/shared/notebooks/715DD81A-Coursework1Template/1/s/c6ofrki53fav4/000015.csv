@@ -1,0 +1,4 @@
+"0",""
+"0","# Visualize forecast components (trend, seasonality)"
+"0","prophet_plot_components(model, forecast)"
+"0",""

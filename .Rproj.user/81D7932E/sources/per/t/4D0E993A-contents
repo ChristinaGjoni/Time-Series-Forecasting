@@ -1,0 +1,195 @@
+---
+title: "Time Series Forecasting with Prophet" 
+subtitle: "Coursework 1 -- CO2 Time Series Analysis" 
+author: "Christina Gjoni" 
+date: "Spring term 2025" 
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab 
+    highlight: tango
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=FALSE}
+# This code will display the QMUL logo at the top right of the page
+# Do not change this code
+htmltools::img(src = knitr::image_uri("images/QMlogo.png"),
+               alt = 'logo',
+               style = 'position:absolute; top:0; right:0; padding:10px; width:20%;')
+```
+
+# 🔮 Introduction: Forecasting our Future with Prophet
+
+Every day, we make predictions on what to wear (I can definitely
+relate!) based on the weather. What if we could **predict real-world
+trends** with data? Which is what we will delve into!
+
+### **Objectives of This Report 📌**
+
+✔️ **Get a sense of CO2 levels over time** 
+
+✔️ **Use Prophet to forecast
+future values** 
+
+✔️ **Graph trends** 
+
+✔️ **Draw conclusions about
+long-term trends**
+
+### 1.1 Let's get our data ready! 📊
+
+Before we are able to begin predicting, we must **correctly format our
+data for use in Prophet.** The default **CO2 dataset** available in R
+provides us with monthly observations from **1959 onward.** We will
+**change it to a form that can be interpreted by Prophet.**
+
+```{r}
+# Load the required libraries
+library(zoo)
+# Rearrange built-in CO2 dataset to a Prophet-acceptable form
+co2_df <- data.frame(
+ds = zoo::as.yearmon(time(co2)), # Reshape time into Year-Month form
+y <- as.numeric(co2) # Convert values to numeric
+)
+# Print the first few rows of the dataset
+head(co2_df)
+```
+
+```{r echo=FALSE}
+library(astsa)
+start(ENSO)
+end(ENSO)
+frequency(ENSO)
+```
+
+### 1.2 Now lets train The Forecast Model🧮
+
+Now that our dataset is correctly formatted, we can train the
+forecasting model. 👉 What the code does: ✅ Loads the prophet package
+✅ Trains the Prophet model using co2_df ✅ Generates a future dataframe
+(8 months ahead) for predictions ✅ Prints out future time periods to
+confirm structure
+
+```{r}
+# Load required libraries
+library(zoo)
+library(prophet)
+
+# Convert CO2 dataset into a Prophet-compatible format
+co2_df <- data.frame(
+  ds = zoo::as.yearmon(time(co2)),  # Convert time to Year-Month format
+  y = as.numeric(co2)  # Convert values to numeric
+)
+
+# Correct column names
+colnames(co2_df) <- c("ds", "y")
+
+# Print structure
+str(co2_df)
+
+# Print first few rows
+head(co2_df)
+
+# Train the Prophet model
+m <- prophet(co2_df)
+
+# Create a dataframe for future predictions (8 months ahead)
+future <- make_future_dataframe(m, periods = 8, freq = "month")
+
+# Display the first few rows of future dates
+head(future)
+```
+
+### 1.3 Let's Visualise the Forecast!📈
+
+Now that we have been able to train our Prophet model, let's get to
+visualizing the predicted CO2 levels! This part will make plots to
+enable us to observe the patterns and trends the model is forecasting.✨
+
+```{r}
+# Load required libraries
+library(zoo)
+library(prophet)
+
+# Convert CO2 dataset into a Prophet-compatible format
+co2_df <- data.frame(
+  ds = zoo::as.yearmon(time(co2)),  # Convert time to Year-Month format
+  y = as.numeric(co2)  # Convert values to numeric
+)
+
+# Correct column names
+colnames(co2_df) <- c("ds", "y")
+
+# Train the Prophet model
+model <- prophet(co2_df)
+
+# Create a dataframe for future predictions (8 months ahead)
+future <- make_future_dataframe(model, periods = 8, freq = "month")
+
+# Check if future dataframe has data
+head(future)
+
+# Generate predictions
+forecast <- predict(model, future)
+
+# Check if forecast was generated
+head(forecast)
+
+# Plot the forecast
+plot(model, forecast)
+
+# Visualise forecast components (trend, seasonality)
+prophet_plot_components(model, forecast)
+
+```
+
+### 1.4 Analyse the Forecast! 📌
+
+✔️ The cumulative CO2 concentrations are increasing, showing a trend of
+increase with time. 
+
+✔️ The confidence intervals (yhat_lower and yhat_upper) indicate potential variations in forecasts, i.e., there is some uncertainty in the future predictions of the model.
+
+✔️ There can be seasonality, where CO2 can increase and decrease in a periodic manner due to annual trends.
+
+```{r echo=FALSE}
+# Summary statistics of the forecast
+summary(forecast)
+
+# Extract key forecasted values
+tail(forecast[, c("ds", "yhat", "yhat_lower", "yhat_upper")])
+```
+
+# The Conclusion 🚀
+
+Our journey through CO₂ forecasting with Prophet has been both insightful and eye-opening! By averaging historical CO₂ data dating back to 1959, we’ve successfully built a predictive model that highlights key trends in atmospheric carbon dioxide levels.
+
+**Key Takeaways:**
+
+✅ Steady Increase in CO₂ Levels
+Our forecast reinforces what has been observed for a long time by climate scientists—CO₂ level is increasing steadily over the years. This is corroborated by real observations from NASA and NOAA, highlighting the gravity of climate observation.
+
+✅ Seasonal Trends & Annual Variations
+Prophet was capable of detecting seasonal variations in CO₂ levels, which could be explained by natural cycles in nature, such as absorption by plants during certain times of the year and increased emissions during winter.
+
+
+# References from NASA 🌍
+
+It's not just numbers, it's a direct reflection of how our planet is changing. With data science and forecasting models like Prophet, we can use data to support climate change efforts, making data-driven decisions that help mitigate risks, drive solutions, and inform meaningful action. If data can make us predict the future, maybe we can change it.❤️
+
+Website: <https://climate.nasa.gov/vital-signs/carbon-dioxide/>
+NASA measures CO₂ concentration and climate patterns from satellite data. It provides very pleasant visualisations and information about CO₂ trends in the long-run.
+
+```{r, echo=FALSE}
+# Display the Glacier Melting image at the specified location
+htmltools::img(src = knitr::image_uri("images/Glacier Melting.png"),
+               alt = 'Glacier Melting',
+               style = 'display:block; margin:auto; padding:10px; width:90%;')
+```
+
+
+
